@@ -1,0 +1,78 @@
+{% extends "menu.html" %}
+
+{% block main_content %}
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+            <div class="col-lg-12">
+                <div class="card px-3">
+                    <div class="card-body">
+                        <h4 class="card-title">CUS1166 - Appointments</h4>
+                        <form method="POST" action="{{url_for('main.appointments')}}" >
+
+                        
+                                <!-- csrf_token is required to validate the form -->
+                                {{ form.csrf_token }}
+                                {{ form.appt_title(class_='form-control todo-list-input', placeholder='add appt title')}}
+                                {{ form.appt_date(class_='form-control todo-list-input', placeholder='add appt date')}}
+                                {{ form.appt_start_time(class_='form-control todo-list-input', placeholder='add appt start time')}}
+                                {{ form.appt_duration(class_='form-control todo-list-input', placeholder='add appt time in minutes')}}
+                                {{ form.appt_location(class_='form-control todo-list-input', placeholder='add appt location')}}
+                                {{ form.appt_customer_name(class_='form-control todo-list-input', placeholder='add appt customer name')}}
+                                {{ form.appt_notes(class_='form-control todo-list-input', placeholder='add appt notes')}}
+                                {{ form.appt_status_completed }}
+                                <button class="add btn btn-primary font-weight-bold todo-list-add-btn">Add</button>
+                    
+                     </form>
+
+                       <!-- Show current appointments if avaiblae -->
+                        <div class="list-wrapper">
+                            <ul class="d-flex flex-column-reverse todo-list">
+                             {% for appointment in appointments %}
+
+                                {% if 'done' == appointment.appt_status%}
+                                    <li class="completed">
+                                {% else %}
+                                    <li>
+                                {% endif %}
+
+                                    <a href="{{url_for('main.edit_appointment',appt_id= appointment.appt_id)}}">
+                                         <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <div class="form-check">
+
+                                      <label class="form-check-label">
+                                          {% if 'completed' == appointment.appt_status %}
+                                            {{appointment.appt_desc}} - <span class="badge badge-success">{{appointment.appt_status}}</span>
+                                          {% elif 'doing' == appointment.appt_status %}
+                                            {{appointment.appt_title}} - <span class="badge badge-warning">{{appointment.appt_status}}</span>
+                                             {{appointment.appt_date}}
+                                             {{appointment.appt_start_time}}
+                                             {{appointment.appt_location}}
+                                             {{appointment.appt_customer_name}}
+                                             {{appointment.appt_notes}}
+                                          {% elif 'upcoming' == appointment.appt_status %}
+                                             {{appointment.appt_title}} - <span class="badge badge-danger">{{appointment.appt_status}}</span>
+                                             {{appointment.appt_date}}
+                                             {{appointment.appt_start_time}}
+                                             {{appointment.appt_location}}
+                                             {{appointment.appt_customer_name}}
+                                             {{appointment.appt_notes}}
+                                        
+                                          {% endif %}
+                                            <i class="input-helper"></i>
+                                      </label>
+                                    </div>
+                                    <a href="{{url_for('main.remove_appointment',appt_id = appointment.appt_id)}}" class="remove"><i class="fas fa-times"></i></a>
+                              </li>
+                             {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

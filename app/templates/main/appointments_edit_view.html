@@ -1,0 +1,33 @@
+{% extends "menu.html" %}
+
+{% block content %}
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+            <div class="col-lg-12">
+                <div class="card px-3">
+                    <div class="card-body">
+                        <h4 class="card-title">CUS1166 - Appointments edit</h4>
+                        <form method="POST" action="{{url_for('main.edit_appointment',appt_id = appt_id)}}" >
+                            <div class="add-items d-flex">
+                                <!-- csrf_token is required to validate the form -->
+                                {{ form.csrf_token }}
+                                {{ form.appt_title(class_='form-control todo-list-input', placeholder='add appt title')}}
+                                {{ form.appt_date(class_='form-control todo-list-input', placeholder='add appt date')}}
+                                {{ form.appt_start_time(class_='form-control todo-list-input', placeholder='add appt start time')}}
+                                {{ form.appt_duration(class_='form-control todo-list-input', placeholder='add appt time in minutes')}}
+                                {{ form.appt_location(class_='form-control todo-list-input', placeholder='add appt location')}}
+                                {{ form.appt_customer_name(class_='form-control todo-list-input', placeholder='add appt customer name')}}
+                                {{ form.appt_notes(class_='form-control todo-list-input', placeholder='add appt notes')}}
+                                {{ form.appt_status_completed }}
+                                
+                                <button class="add btn btn-primary font-weight-bold todo-list-add-btn">Add</button>
+                       </div>
+                     </form>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
