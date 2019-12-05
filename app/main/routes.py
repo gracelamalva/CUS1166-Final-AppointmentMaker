@@ -210,18 +210,23 @@ def filter_appointments_thisweek():
 def search_results():
 
     appointments = db.session.query(Appointment).all()
-    searchform = AppointmentSearchForm()
+    searchform = AppointmentSearchForm( )
     form = AppointmentForm
-
+    """
     if searchform.select == "title":
+        searchform = AppointmentSearchForm()
+        form = AppointmentForm
         appointments = Appointment.query.filter(Appointment.appt_title.like(searchform.search.data + "%")).all()
         #results = Appointment.query.filter_by(title = )
         return render_template("main/appointment.html", appointments=appointments, form = form, searchform = searchform)
  
     if searchform.select == "customer name":
-        results = Appointment.query.filter(Appointment.appt_customer_name.like(search + "%")).all()
+        searchform = AppointmentSearchForm()
+        form = AppointmentForm
+        appointments = Appointment.query.filter(Appointment.appt_customer_name.like(search + "%")).all()
         #results = Appointment.query.filter_by(title = )
         return render_template("main/appointment.html", appointments=appointments, form = form, searchform = searchform)
 
- 
+    """ 
     return render_template("main/appointment.html", appointments=appointments, form = form, searchform = searchform)
+
