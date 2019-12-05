@@ -25,8 +25,26 @@
                     
                      </form>
 
+                     <form method="POST" action="{{url_for('main.search_results')}}" >
+
+                        
+                            <!-- csrf_token is required to validate the form -->
+                            {{ searchform.csrf_token }}
+                            {{ searchform.search(class_='form-control todo-list-input', placeholder='search ')}}
+                            {{ searchform.select }}
+                            <button class="add btn btn-primary font-weight-bold todo-list-add-btn">Search</button>
+                
+                 </form>
+
                        <!-- Show current appointments if avaiblae -->
                         <div class="list-wrapper">
+                            
+                            <a href = "{{url_for('main.appointments')}}">View all appointments</a>,
+                            <a href = "{{url_for('main.filter_appointments')}}">Filter today's appointments</a>,
+                            <a href = "{{url_for('main.filter_appointments_overdue')}}">Filter overdue appointments</a>,
+                            <a href = "{{url_for('main.filter_appointments_thisweek')}}">Filter this week's appointments</a>,
+                            <a href = "{{url_for('main.filter_appointments_completed')}}">Filter completed appointments</a>
+
                             <ul class="d-flex flex-column-reverse todo-list">
                              {% for appointment in appointments %}
 
@@ -44,14 +62,40 @@
 
                                       <label class="form-check-label">
                                           {% if 'completed' == appointment.appt_status %}
-                                            {{appointment.appt_desc}} - <span class="badge badge-success">{{appointment.appt_status}}</span>
-                                          {% elif 'doing' == appointment.appt_status %}
+                                          {{appointment.appt_title}} - <span class="badge badge-success">{{appointment.appt_status}}</span>
+                                          {{appointment.appt_date}}
+                                          {{appointment.appt_start_time}}
+                                          {{appointment.appt_location}}
+                                          {{appointment.appt_customer_name}}
+                                          {{appointment.appt_notes}}                                         
+                                           {% elif 'upcoming' == appointment.appt_status %}
                                             {{appointment.appt_title}} - <span class="badge badge-warning">{{appointment.appt_status}}</span>
                                              {{appointment.appt_date}}
                                              {{appointment.appt_start_time}}
                                              {{appointment.appt_location}}
                                              {{appointment.appt_customer_name}}
                                              {{appointment.appt_notes}}
+                                             {% elif 'today' == appointment.appt_status %}
+                                             {{appointment.appt_title}} - <span class="badge badge-warning">{{appointment.appt_status}}</span>
+                                              {{appointment.appt_date}}
+                                              {{appointment.appt_start_time}}
+                                              {{appointment.appt_location}}
+                                              {{appointment.appt_customer_name}}
+                                              {{appointment.appt_notes}}
+                                              {% elif 'this week' == appointment.appt_status %}
+                                              {{appointment.appt_title}} - <span class="badge badge-warning">{{appointment.appt_status}}</span>
+                                               {{appointment.appt_date}}
+                                               {{appointment.appt_start_time}}
+                                               {{appointment.appt_location}}
+                                               {{appointment.appt_customer_name}}
+                                               {{appointment.appt_notes}}
+                                               {% elif 'overdue' == appointment.appt_status %}
+                                               {{appointment.appt_title}} - <span class="badge badge-danger">{{appointment.appt_status}}</span>
+                                                {{appointment.appt_date}}
+                                                {{appointment.appt_start_time}}
+                                                {{appointment.appt_location}}
+                                                {{appointment.appt_customer_name}}
+                                                {{appointment.appt_notes}}
                                           {% elif 'upcoming' == appointment.appt_status %}
                                              {{appointment.appt_title}} - <span class="badge badge-danger">{{appointment.appt_status}}</span>
                                              {{appointment.appt_date}}

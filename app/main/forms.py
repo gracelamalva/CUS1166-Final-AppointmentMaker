@@ -11,7 +11,7 @@ class TaskForm(FlaskForm):
 
 class AppointmentForm(FlaskForm):
     #appt_desc = StringField('appt_desc', validators=[DataRequired()])
-    appt_status_completed = SelectField('Status', choices=[('upcoming','upcoming'),('doing','Doing'),('completed','Completed')])
+    appt_status_completed = SelectField('Status', choices=[('upcoming','Upcoming'),('today','Today'),('this week','This week'),('overdue','Overdue'),('completed','Completed')])
     appt_title = StringField('appt_title')#, validators=[DataRequired()])
     appt_date = DateField('appt_date', format = '%Y-%m-%d')
     appt_start_time = StringField('appt_start_time') #in minutes
@@ -21,3 +21,9 @@ class AppointmentForm(FlaskForm):
     appt_notes = StringField('appt_customer_name')#, validators=[DataRequired()])
     appt_status = StringField('appt_status')#, validators=[DataRequired()])
     submit = SubmitField('submit')
+
+class AppointmentSearchForm(FlaskForm):
+    choices = [('title', 'title'),
+               ('customer name', 'customer name')]
+    select = SelectField('Search for Appointments', choices=choices)
+    search = StringField('')

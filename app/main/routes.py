@@ -1,8 +1,10 @@
 from flask import render_template,  redirect, url_for, flash
 from app.main import bp
 from app import db
-from app.main.forms import TaskForm, AppointmentForm
+from app.main.forms import TaskForm, AppointmentForm, AppointmentSearchForm
 from app.models import Task, Appointment
+from datetime import datetime as dt
+from datetime import timedelta
 
 # Main route of the applicaitons.
 @bp.route('/', methods=['GET','POST'])
@@ -74,7 +76,12 @@ def edit_task(task_id):
 def appointments():
 
     form = AppointmentForm()
+    searchform = AppointmentSearchForm()
 
+    if searchform.validate_on_submit():
+        search = searchform.search.data
+        return redirect(url_for('main.search_results'))
+        
     if form.validate_on_submit():
         # Get the data from the form, and add it to the database.
         new_appt = Appointment()
@@ -97,7 +104,7 @@ def appointments():
 
     appointments = db.session.query(Appointment).all()
 
-    return render_template("main/appointment.html",appointments = appointments ,form= form)
+    return render_template("main/appointment.html",appointments = appointments, searchform = searchform,form= form)
 
 
 # Route for removing an appointment
@@ -154,3 +161,67 @@ def edit_appointment(appt_id):
 
     return render_template("main/appointments_edit_view.html",form=form, appt_id = appt_id)
 
+#filter today
+@bp.route('/filter_appointments', methods=['GET','POST'])
+def filter_appointments():
+    form = AppointmentForm()
+    searchform = AppointmentSearchForm()
+
+    appointments = db.session.query(Appointment).filter_by(appt_date = dt.today())
+
+    return render_template("main/appointment.html",appointments = appointments, form = form, searchform = searchform)
+
+
+@bp.route('/filter_appointments_overdue', methods=['GET','POST'])
+def filter_appointments_overdue():
+    form = AppointmentForm()
+    searchform = AppointmentSearchForm()
+
+    appointments = db.session.query(Appointment).filter_by(appt_status= "overdue")
+
+    return render_template("main/appointment.html",appointments = appointments, form = form, searchform = searchform)
+
+@bp.route('/filter_appointments_completed', methods=['GET','POST'])
+def filter_appointments_completed():
+    form = AppointmentForm()
+    searchform = AppointmentSearchForm()
+
+    appointments = db.session.query(Appointment).filter_by(appt_status= "completed")
+
+    return render_template("main/appointment.html",appointments = appointments, form = form, searchform = searchform)
+
+@bp.route('/filter_appointments_thisweek', methods=['GET','POST'])
+def filter_appointments_thisweek():
+
+    form = AppointmentForm()
+    searchform = AppointmentSearchForm()
+    """
+    today = dt.today()
+    thisweek = today + dt.timedelta(days =7)
+    appointments = db.session.query(Appointment).filter_by(thisweek)
+    """
+
+    appointments = Appointment.query.filter_by(appt_status= 'this week')
+
+    return render_template("main/appointment.html",appointments = appointments, form = form, searchform = searchform)
+
+
+@bp.route('/search', methods=['GET','POST'])
+def search_results():
+
+    appointments = db.session.query(Appointment).all()
+    searchform = AppointmentSearchForm()
+    form = AppointmentForm
+
+    if searchform.select == "title":
+        appointments = Appointment.query.filter(Appointment.appt_title.like(searchform.search.data + "%")).all()
+        #results = Appointment.query.filter_by(title = )
+        return render_template("main/appointment.html", appointments=appointments, form = form, searchform = searchform)
+ 
+    if searchform.select == "customer name":
+        results = Appointment.query.filter(Appointment.appt_customer_name.like(search + "%")).all()
+        #results = Appointment.query.filter_by(title = )
+        return render_template("main/appointment.html", appointments=appointments, form = form, searchform = searchform)
+
+ 
+    return render_template("main/appointment.html", appointments=appointments, form = form, searchform = searchform)
